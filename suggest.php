@@ -9,6 +9,11 @@
 // 7. Skriv ut formuläret om ingen POST är skickad.
 // 8. Formuläret skickas till samma sida.
 
+//Import the PHPMailer class into the global namespace
+//The use statement must be the first command of the file
+use PHPMailer\PHPMailer\PHPMailer;
+require 'vendor/phpmailer/phpmailer/src/PHPMailer.php';
+require 'vendor/phpmailer/phpmailer/src/Exception.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $name = trim(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING));
@@ -25,13 +30,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     exit;
   }
 
+  if (!PHPMailer::validateAddress($email)) {
+    echo 'Invalid Email Adress';
+    exit;
+  }
+
   $email_body = "";
   $email_body .= "Name " . $name . "\n";
   $email_body .= "Email " . $email . "\n";
   $email_body .= "Details " . $details . "\n";
-  $email_body;
 
-  // To do: Send email!
+
+  $mail = new PHPMailer;
+  //It's important not to use the submitter's address as the from address as it's forgery,
+  //which will cause your messages to fail SPF checks.
+  //Use an address in your own domain as the from address, put the submitter's address in a reply-to
+  $mail->setFrom('psterner@hotmail.com', $name);
+  $mail->addReplyTo($email, $name);
+  $mail->addAddress('psterner@hotmail.com', 'Pernilla');
+  $mail->Subject = 'Library Suggeston from ' . $name;
+  $mail->Body = $email_body;
+  if (!$mail->send()) {
+      echo "Mailer Error: " . $mail->ErrorInfo;
+      exit;
+  }
 
   header('Location:suggest.php?status=thanks');
 }
