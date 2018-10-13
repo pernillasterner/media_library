@@ -98,7 +98,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $pageTitle = 'Suggest a Media Item';
 $section = 'suggest';
 
-include('inc/header.php'); ?>
+include('inc/header.php');
+?>
 
 <div class="section page">
   <div class="wrapper">
@@ -107,8 +108,13 @@ include('inc/header.php'); ?>
     if (isset($_GET['status']) && $_GET['status'] == 'thanks') {
         echo '<p>Thank for the email! I&rsquo;ll check out your suggestion shortley!</p>';
     } else {
+        if (isset($error_message)) {
+          echo '<p class="message">' . $error_message . '</p>';
+        } else {
+          echo '<p>If you think there is something I&rsquo;m missing, let me know! Complete the form to send me an email.</p>';
+        }
     ?>
-    <p>If you think there is something I&rsquo;m missing, let me know! Complete the form to send me an email.</p>
+
 
     <form action="suggest.php" method="post">
       <table>
