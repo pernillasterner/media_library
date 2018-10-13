@@ -459,7 +459,7 @@ include('inc/header.php');
         </tr>
         <tr>
           <th><label for="details">Additional Details.</label></th>
-          <td><textarea name="details" id="details" rows="8" cols="80"><?php if (isset($details)) echo $details; ?></textarea></td>
+          <td><textarea name="details" id="details" rows="8" cols="80"><?php if (isset($details)) echo htmlspecialchars($_POST['details']); ?></textarea></td>
         </tr>
         <tr style="display:none;">
           <th><label for="address">Address</label></th>
